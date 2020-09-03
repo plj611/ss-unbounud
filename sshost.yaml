@@ -1,0 +1,43 @@
+version: '2'
+
+services:
+  shadowsocks: 
+    image: shadowsocks/shadowsocks-libev 
+    environment:
+# Environment variables can be checked using docker inspect shadowsocks container
+#        - PASSWORD=Abarfoo!
+#        - METHOD=aes-256-cfb
+#        - DNS_ADDRS=10.0.0.6 
+        - ARGS=-v -c /opt/config.json
+        - TZ=Asia/Shanghai
+    command: ["/bin/sh", "-c", "exec ss-server $${ARGS}"]
+    ports: 
+        - "7005:8388"
+    networks:
+        vnss:
+            ipv4_address: 10.0.0.5 
+    volumes:
+        - ${PWD}/ss:/opt
+
+  unbound:
+    image: mvance/unbound
+# Mapping ports are not needed since unbound doesn't need to answer external queries. It 
+# only answer queries from shadowsocks
+#    ports:
+#        - "7913:53"
+#        - "53:53/udp"
+    environment:
+      - TZ=Asia/Shanghai
+    networks:
+        vnss:
+            ipv4_address: 10.0.0.6
+    volumes:
+        - ${PWD}/unbound:/opt/unbound/etc/unbound/
+
+networks:
+  vnss:
+    driver: bridge
+    ipam:
+     config:
+       - subnet: 10.0.0.0/24
+         gateway: 10.0.0.1
