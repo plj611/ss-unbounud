@@ -1,0 +1,7 @@
+{
+    "target": "10.0.0.5:8388",
+    "mode": "fast3",
+    "sockbuf": 16777217,
+    "key": "Abarfoo!",
+    "nocomp": true
+}

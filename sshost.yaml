@@ -27,7 +27,8 @@ services:
 #        - "7913:53"
 #        - "53:53/udp"
     environment:
-      - TZ=Asia/Shanghai
+        - ARGS=-v -c /opt/config.json
+        - TZ=Asia/Shanghai
     networks:
         vnss:
             ipv4_address: 10.0.0.6
@@ -35,6 +36,20 @@ services:
         - ${PWD}/unbound:/opt/unbound/etc/unbound/
     healthcheck:
       disable: true
+
+  kcptun:
+    image: xtaci/kcptun
+    command: ["/bin/sh", "-c", "exec server $${ARGS}"]
+    ports:
+        - "4500:29900/udp"
+    environment:
+        - ARGS=-c /opt/config.json
+        - TZ=Asia/Shanghai
+    networks:
+        vnss:
+            ipv4_address: 10.0.0.7
+    volumes:
+        - ${PWD}/kcptun:/opt
 
 networks:
   vnss:
