@@ -27,7 +27,7 @@ services:
 #        - "7913:53"
 #        - "53:53/udp"
     environment:
-        - ARGS=-v -c /opt/config.json
+#        - ARGS=-v -c /opt/config.json
         - TZ=Asia/Shanghai
     networks:
         vnss:
